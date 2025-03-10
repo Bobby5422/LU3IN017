@@ -1,4 +1,4 @@
-# LU3IN017 : Projet Forum Organiz'asso
+# LU3IN017 : Projet Forum Organiz'
 
 ## Partie 0 : Github
 
