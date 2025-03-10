@@ -13,7 +13,7 @@
         git add .   #ajout des fichiers modifies
         git commit -m "Message clair sur la modification"
         ```
-    - Envoie des modifications dqzdzqz
+    - Envoie des modifications
         ```
         git push origin main
         ```
