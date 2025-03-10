@@ -126,7 +126,3 @@ Les pages principales à développer sont :
   - Affiche le profil de l'utilisateur et la liste de ses messages.
 
 ---
-
-Ce fichier README.md sert de référence pour l'ensemble du projet. Il résume le cahier des charges et fournit une vue d'ensemble des fonctionnalités à implémenter ainsi que de l'architecture globale du système.
-
-N'hésite pas à le modifier et à l'enrichir au fur et à mesure que le projet évolue !
