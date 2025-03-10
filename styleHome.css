@@ -43,7 +43,7 @@ header {
     align-items: end;
     position: relative;
     z-index: 1;    
-    background-image: url('espace.jpg');
+    background-image: url('ressources/espace.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
