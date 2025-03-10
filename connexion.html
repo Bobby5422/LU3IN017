@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire de connexion</title>
+    <link rel="stylesheet" href="styleConnexion.css">
+</head>
+<body>
+    <form action="/connexion" method="post">
+        <h1>Ouvrir une session</h1>
+        <div class="grid-container">
+            <label for="prenom">Prénom</label>             
+            <label for="nom">Nom</label>
+            <input type="text" id="prenom" name="prenom" placeholder="entrez votre prénom"required aria-required="true">
+            <input type="text" id="nom" name="nom" placeholder="entrez votre nom" required aria-required="true">           
+            <label for="login">Login</label>
+            <input type="text" id="login" name="login" placeholder="entrez votre login" required aria-required="true">
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="password" placeholder="entrez votre mot de passe" required aria-required="true">
+            <label for="password">Retapez votre mot de passe</label>
+            <input type="password" id="password" name="password" placeholder="entre le même mot de passe" required aria-required="true">
+            <button type="submit">Connexion</button>
+            <button type="reset">Annuler</button>
+        </div>
+    </form>
+</body>
+</html>

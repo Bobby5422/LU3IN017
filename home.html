@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Web Exo2</title>
+    <link rel="stylesheet" href="styleHome.css">
+</head>
+<body> 
+    <header class="header">
+        <h1>Header</h1>         
+        <div class="logo">
+            <img src="logo_sorbonne.png" alt="Logo de Sorbonne Université" />
+        </div>
+        <div class="search">
+            <form>
+                <input type="text" placeholder="Rechercher..." name="search" />
+                <label for="start-date">Début :</label>
+                <input type="date" id="start-date" name="start-date" />
+                <label for="end-date">Fin :</label>
+                <input type="date" id="end-date" name="end-date" />
+                <button type="submit">Rechercher</button>
+            </form>
+        </div>
+        <div class="links">
+            <a href="connexion.html">Connexion</a> 
+            <a href="enregistrement.html">Enregistrement</a>
+        </div>
+    </header>
+    <div class="main-content">
+        <aside class="info">Zone Informations</aside>
+            <section class="messages">
+                <div class="new-message">
+                    <form>
+                        <input type="text" placeholder="Écrivez votre message..." name="new-message" />
+                        <button type="submit">Ajouter</button>
+                    </form>
+                </div>
+                <div class="message-list">
+                        <div class="message">
+                        <p><strong>Message :</strong> Bonjour, ceci est un message fictif.</p>
+                        <p><strong>Date :</strong> 2025-01-27</p>
+                        <p><strong>Propriétaire :</strong> utilisateur1</p>
+                        <button>+</button>
+                    </div>
+                    <div class="message reply">
+                        <p><strong>Réponse :</strong> Merci pour votre message.</p>
+                        <p><strong>Date :</strong> 2025-01-27</p>
+                        <p><strong>Propriétaire :</strong> utilisateur2</p>
+                        <button>+</button>
+                    </div>
+                    <div class="message">
+                        <p><strong>Message :</strong> Voici un autre message fictif.</p>
+                        <p><strong>Date :</strong> 2025-01-26</p>
+                        <p><strong>Propriétaire :</strong> utilisateur3</p>
+                        <button>+</button>
+                    </div>
+                </div>
+            </section>
+    </div>
+</body>
+</html>

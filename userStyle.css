@@ -1,0 +1,80 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    position: relative;
+    z-index: 1;    
+    background-image: url('espace.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 8px;
+}
+
+header h1 {
+    margin: 0;
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.user-info {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+}
+
+.user-info h2 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.user-info p {
+    margin: 5px 0;
+}
+
+.user-messages h2 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.message-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.message {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.message.reply {
+    margin-left: 20px;
+    background-color: #eef7ff;
+    border-left: 4px solid #007BFF;
+}
+
+.message p {
+    margin: 5px 0;
+}
+
+.message strong {
+    color: #333;
+}
