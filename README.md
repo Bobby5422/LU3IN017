@@ -18,7 +18,7 @@
         git push origin main
         ```
 
-# Organiz'asso Consignes
+# Organiz'asso Consigne
 
 Organiz'asso est une application web de forum destinée aux membres d'une association. Le site permet aux utilisateurs d'échanger des messages et d'accéder à diverses fonctionnalités, avec des droits spécifiques pour les administrateurs.
 
