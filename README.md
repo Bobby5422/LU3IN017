@@ -4,13 +4,13 @@
 
 - **Avant de commencer à coder :**
     ```
-    git pull origin main    # mise à jour de la copie locale
+    git pull origin main    #mise à jour de la copie locale
     ```
 
 - **Après avoir codé :**
     - Enrigstrement des modifications 
         ```
-        git add .   # ajout des fichiers modifies
+        git add .   #ajout des fichiers modifies
         git commit -m "Message clair sur la modification"
         ```
     - Envoie des modifications 
