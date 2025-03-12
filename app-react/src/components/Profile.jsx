@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import AdminDashboard from './AdminDashboard';
 
 function Profile() {
   const [userInfo, setUserInfo] = useState(null);
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    // Appeler l'API REST getUser et getInfoMessageUser pour récupérer les infos et les messages
-    // Exemple :
+    // Exemple d'appel à l'API pour récupérer les infos utilisateur
+    // Remplacez 'currentUserId' par l'ID de l'utilisateur courant.
     // api.getUser(currentUserId).then(data => setUserInfo(data));
     // api.getListMessageFromUser(currentUserId).then(msgs => setMessages(msgs));
   }, []);
@@ -23,6 +24,12 @@ function Profile() {
       ) : (
         <p>Chargement des informations...</p>
       )}
+
+      {/* Rendu conditionnel pour afficher l'AdminDashboard si l'utilisateur est admin */}
+      {userInfo && userInfo.role === 'admin' && (
+        <AdminDashboard />
+      )}
+
       <h2>Liste des messages</h2>
       <ul className="message-list">
         {messages.map(msg => (
