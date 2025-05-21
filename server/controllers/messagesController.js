@@ -1,95 +1,49 @@
-const {
-  createMessage,
-  getAllMessages,
-  getMessageById,
-  updateMessage,
-  deleteMessage
-} = require('../models/message');
+// server/controllers/messagesController.js
+const { createMessage, getAllMessages, deleteMessage } = require('../models/message');
 
 /**
  * POST /api/messages
  */
-async function createMessageController(req, res) {
+async function postMessage(req, res, next) {
   try {
-    const messageData = req.body;
-    const result = await createMessage(req.db, messageData);
-    // On renvoie l'objet créé, en injectant l'_id
-    res.status(201).json({ _id: result.insertedId, ...messageData });
+    // Vérifie la session
+    if (!req.session.userId) return res.sendStatus(401);
+
+    const msg = await createMessage(req.db, {
+      authorId: req.session.userId,
+      text: req.body.text
+    });
+    res.status(201).json(msg);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 }
 
 /**
  * GET /api/messages
  */
-async function getAllMessagesController(req, res) {
+async function listMessages(req, res, next) {
   try {
-    const messages = await getAllMessages(req.db);
-    res.json(messages);
+    const msgs = await getAllMessages(req.db);
+    res.json(msgs);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-}
-
-/**
- * GET /api/messages/:id
- */
-async function getMessageByIdController(req, res) {
-  try {
-    const { id } = req.params;
-    const message = await getMessageById(req.db, id);
-    if (!message) return res.status(404).json({ error: 'Message non trouvé' });
-    res.json(message);
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: 'ID invalide' });
-  }
-}
-
-/**
- * PUT /api/messages/:id
- */
-async function updateMessageController(req, res) {
-  try {
-    const { id } = req.params;
-    const update = req.body;
-    const result = await updateMessage(req.db, id, update);
-    if (result.matchedCount === 0) {
-      return res.status(404).json({ error: 'Message non trouvé' });
-    }
-    // On peut renvoyer le nombre de documents modifiés
-    res.json({ modifiedCount: result.modifiedCount });
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: 'ID invalide ou données incorrectes' });
+    next(err);
   }
 }
 
 /**
  * DELETE /api/messages/:id
  */
-async function deleteMessageController(req, res) {
+async function removeMessage(req, res, next) {
   try {
-    const {id } = req.params;
-    const result = await deleteMessage(req.db, id);
+    const result = await deleteMessage(req.db, req.params.id);
     if (result.deletedCount === 0) {
-      return res.status(404).json({ error: 'Message non trouvé' });
+      return res.sendStatus(404);
     }
-    // 204 No Content
-    res.status(204).end();
+    res.sendStatus(204);
   } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: 'ID invalide' });
+    next(err);
   }
 }
 
-module.exports = {
-  createMessageController,
-  getAllMessagesController,
-  getMessageByIdController,
-  updateMessageController,
-  deleteMessageController
-};
+module.exports = { postMessage, listMessages, removeMessage };

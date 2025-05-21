@@ -1,27 +1,23 @@
+// server/routes/messages.js
 const express = require('express');
-const {
-  createMessageController,
-  getAllMessagesController,
-  getMessageByIdController,
-  updateMessageController,
-  deleteMessageController
-} = require('../controllers/messagesController');
+const { body } = require('express-validator');
+const { postMessage, listMessages, removeMessage } = require('../controllers/messagesController');
+const validate = require('../middlewares/validate');
 
 const router = express.Router();
 
-// Créer un message
-router.post('/', createMessageController);
+// Liste tous les messages
+router.get('/', listMessages);
 
-// Récupérer tous les messages
-router.get('/', getAllMessagesController);
+// Crée un nouveau message (texte non vide)
+router.post(
+  '/',
+  body('text').isString().notEmpty(),
+  validate,
+  postMessage
+);
 
-// Récupérer un seul message par son ID
-router.get('/:id', getMessageByIdController);
-
-// Mettre à jour un message (PUT ou PATCH selon tes préférences)
-router.put('/:id', updateMessageController);
-
-// Supprimer un message
-router.delete('/:id', deleteMessageController);
+// Supprime par ID
+router.delete('/:id', removeMessage);
 
 module.exports = router;

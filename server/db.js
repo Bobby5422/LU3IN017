@@ -1,13 +1,18 @@
+// server/db.js
+// Charge les variables du .env
+require('dotenv').config();
+
 const { MongoClient } = require('mongodb');
 
-const uri = "mongodb://localhost:27017";
-const client = new MongoClient(uri);
-const dbName = "forumDB";
+// Crée un client Mongo à partir de l'URI configurée
+const client = new MongoClient(process.env.MONGO_URI);
 
 async function connectDB() {
+  // Essaie de se connecter au serveur Mongo
   await client.connect();
-  console.log("MongoDB connecté !");
-  return client.db(dbName);
+  // Retourne l'objet `Db` (ici : forumDB)
+  return client.db();
 }
 
+// Expose la fonction de connexion
 module.exports = { connectDB };

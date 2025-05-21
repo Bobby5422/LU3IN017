@@ -1,70 +1,55 @@
+// server/models/message.js
 const { ObjectId } = require('mongodb');
 
 /**
- * Ajoute un nouveau message dans la collection "messages".
- * @param {Db} db  instance de ta base MongoDB
- * @param {Object} message  objet { author, content, date, … }
- * @returns {Promise<InsertOneResult>}
+ * Crée un message
+ * - authorId : ObjectId de l'utilisateur
+ * - text : contenu
  */
-async function createMessage(db, message) {
-  return db.collection('messages').insertOne({
-    ...message,
-    date: message.date || new Date()
-  });
+async function createMessage(db, { authorId, text }) {
+  const doc = {
+    authorId: new ObjectId(authorId),
+    text,
+    createdAt: new Date()
+  };
+  const { insertedId } = await db.collection('messages').insertOne(doc);
+  return { _id: insertedId, ...doc };
 }
 
 /**
- * Récupère tous les messages correspondants à un filtre optionnel.
- * @param {Db} db
- * @param {Object} [filter={}]
- * @returns {Promise<Array>}
+ * Récupère tous les messages triés par date
+ * et enrichit l'auteur via un $lookup
  */
-async function getAllMessages(db, filter = {}) {
+async function getAllMessages(db) {
   return db.collection('messages')
-    .find(filter)
-    .sort({ date: -1 })    // tri par date décroissante, facultatif
+    .aggregate([
+      { $sort: { createdAt: -1 } },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'authorId',
+          foreignField: '_id',
+          as: 'author'
+        }
+      },
+      { $unwind: '$author' },
+      {
+        $project: {
+          text: 1,
+          createdAt: 1,
+          'author._id': 1,
+          'author.email': 1
+        }
+      }
+    ])
     .toArray();
 }
 
 /**
- * Récupère un message par son _id.
- * @param {Db} db
- * @param {string} id  chaîne hexadécimale de l’ObjectId
- * @returns {Promise<Object|null>}
- */
-async function getMessageById(db, id) {
-  return db.collection('messages').findOne({ _id: new ObjectId(id) });
-}
-
-/**
- * Met à jour un message existant (remplacement partiel).
- * @param {Db} db
- * @param {string} id
- * @param {Object} update  champs à mettre à jour, ex. { content: "...", edited: true }
- * @returns {Promise<UpdateResult>}
- */
-async function updateMessage(db, id, update) {
-  return db.collection('messages')
-    .updateOne(
-      { _id: new ObjectId(id) },
-      { $set: update }
-    );
-}
-
-/**
- * Supprime un message par son _id.
- * @param {Db} db
- * @param {string} id
- * @returns {Promise<DeleteResult>}
+ * Supprime un message par son ID
  */
 async function deleteMessage(db, id) {
   return db.collection('messages').deleteOne({ _id: new ObjectId(id) });
 }
 
-module.exports = {
-  createMessage,
-  getAllMessages,
-  getMessageById,
-  updateMessage,
-  deleteMessage
-};
+module.exports = { createMessage, getAllMessages, deleteMessage };

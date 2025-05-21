@@ -1,53 +1,70 @@
-const express       = require('express');
-const session       = require('express-session');
-const cookieParser  = require('cookie-parser');
-const cors          = require('cors');
-const { connectDB } = require('./db');               // ton module de connexion Mongo
-const usersRouter   = require('./routes/users');
-const messagesRouter= require('./routes/messages');
+// server/app.js
+require('dotenv').config();           // Charge .env en début
+const express = require('express');
+const cors   = require('cors');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+
+const { connectDB } = require('./db');
+const usersRouter    = require('./routes/users');
+const messagesRouter = require('./routes/messages');
 
 const app = express();
 
-// 1) MIDDLEWARES GLOBAUX
-app.use(express.json());  // lit les JSON dans le body
-app.use(cookieParser());  // parse les cookies
+// 1) Sécurité des headers
+app.use(helmet());
+
+// 2) CORS (autorise ton client React sur 5173)
 app.use(cors({
-  origin: 'http://localhost:5173',  // client React
-  credentials: true                 // autorise les cookies cross-site
+  origin: 'http://localhost:5173',
+  credentials: true
 }));
+
+// 3) Parser JSON et cookies
+app.use(express.json());
+app.use(cookieParser());
+
+// 4) Sessions (stockées en mémoire en dev)
 app.use(session({
-  secret: 'secret',
+  secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false }     // en prod mettre secure: true + HTTPS
+  saveUninitialized: false,
+  cookie: { secure: false } // mettre true en production avec HTTPS
 }));
 
-// 2) ROUTE DE TEST
-app.get('/', (req, res) => {
-  res.send('Serveur Node/Express opérationnel !');
-});
+// 5) Health-check simple
+app.get('/healthz', (_req, res) => res.sendStatus(200));
 
-// 3) CONNEXION À MONGODB ET MONTAGE DES ROUTERS
+// 6) Connexion à MongoDB, puis démarrage du serveur
 connectDB()
   .then(db => {
-    console.log('✅ MongoDB connecté !');
+    console.log('✅ MongoDB connecté');
 
-    // injecte `db` dans chaque req
-    app.use((req, _, next) => {
+    // Injecte `db` dans chaque requête
+    app.use((req, _res, next) => {
       req.db = db;
       next();
     });
 
-    // monte les routers
+    // 7) Monte les routers
     app.use('/api/users',    usersRouter);
     app.use('/api/messages', messagesRouter);
 
-    // 4) LANCE LE SERVEUR
-    app.listen(3000, () => {
-      console.log('Serveur démarré sur le port 3000');
+    // 8) Middleware global de gestion d’erreur
+    app.use((err, _req, res, _next) => {
+      console.error(err);
+      res
+        .status(err.statusCode || 500)
+        .json({ error: err.message });
     });
+
+    // 9) Démarrage de l’écoute
+    app.listen(process.env.PORT, () =>
+      console.log(`🚀 Server sur port ${process.env.PORT}`)
+    );
   })
   .catch(err => {
-    console.error('Échec de la connexion à MongoDB :', err);
+    console.error('❌ Impossible de se connecter à MongoDB', err);
     process.exit(1);
   });

@@ -1,53 +1,64 @@
-const { connectDB } = require('../db');
-const { createUser, findUserByEmail } = require('../models/user');
+// server/controllers/usersController.js
+const bcrypt = require('bcrypt');
+const { createUser, getUserByEmail, getUserById } = require('../models/user');
 
-async function registerUser(req, res) {
-  const db = await connectDB();
-  const user = await createUser(db, req.body);
-  res.json(user);
-}
-
-async function loginUserController(req, res) {
-  const { email, password } = req.body;
+/**
+ * POST /api/users/register
+ */
+async function register(req, res, next) {
   try {
-    const user = await req.db.collection('users').findOne({ email });
-    if (!user) {
-      return res.status(401).json({ error: 'Utilisateur non trouvé' });
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ error: 'Mot de passe incorrect' });
-    }
-
-    // Auth OK → on crée la session
-    req.session.user = {
-      id: user._id,
-      email: user.email,
-      role: user.role,
-    };
-
-    res.status(200).json({ message: 'Connexion réussie' });
+    const user = await createUser(req.db, req.body);
+    // On initialise la session
+    req.session.userId = user._id;
+    res.status(201).json(user);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Erreur serveur' });
+    next(err);
   }
 }
 
-function logoutUser(req, res) {
-  req.session.destroy(err => {
-    if (err) return res.status(500).json({ error: 'Erreur de déconnexion' });
-    res.clearCookie('connect.sid');  // optionnel mais conseillé
-    res.status(200).json({ message: 'Déconnecté' });
-  });
-}
-
-function getCurrentUser(req, res) {
-  if (req.session && req.session.user) {
-    res.json(req.session.user);
-  } else {
-    res.status(401).json({ error: 'Non authentifié' });
+/**
+ * POST /api/users/login
+ */
+async function login(req, res, next) {
+  try {
+    const { email, password } = req.body;
+    // 1) Recherche par email
+    const user = await getUserByEmail(req.db, email);
+    // 2) Vérifie l'existence et le hash
+    if (!user || !await bcrypt.compare(password, user.password)) {
+      const err = new Error('Email ou mot de passe invalide');
+      err.statusCode = 401;
+      return next(err);
+    }
+    // 3) Établit la session
+    req.session.userId = user._id;
+    // 4) Renvoie les infos publiques
+    res.json({ _id: user._id, email: user.email, role: user.role });
+  } catch (err) {
+    next(err);
   }
 }
 
-module.exports = { registerUser, loginUser , logoutUser, getCurrentUser };
+/**
+ * POST /api/users/logout
+ */
+async function logout(req, res) {
+  req.session.destroy();
+  res.sendStatus(204);
+}
+
+/**
+ * GET /api/users/me
+ */
+async function me(req, res, next) {
+  if (!req.session.userId) {
+    return res.sendStatus(401);
+  }
+  const user = await getUserById(req.db, req.session.userId);
+  if (!user) {
+    return res.sendStatus(404);
+  }
+  res.json({ _id: user._id, email: user.email, role: user.role });
+}
+
+module.exports = { register, login, logout, me };
