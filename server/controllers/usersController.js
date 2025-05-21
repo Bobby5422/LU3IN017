@@ -11,8 +11,8 @@ async function loginUser(req, res) {
   const db = await connectDB();
   const user = await findUserByEmail(db, req.body.email);
   if (user) {
-    req.session.user = user; // Stocke dans session
-    res.json(user);
+    req.session.user = user._id; // Stocke dans session
+    res.json({ message: 'Connecté avec succès', user });
   } else res.status(404).send('Utilisateur introuvable');
 }
 

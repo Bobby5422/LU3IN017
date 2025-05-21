@@ -9,8 +9,8 @@ import Home from './pages/Home';
 import './App.css';
 
 function App() {
-  const [isConnected, setIsConnected] = useState(true);
-  const [page, setPage] = useState('main'); // 'home', 'main', etc.
+  const [isConnected, setIsConnected] = useState(false);
+  const [page, setPage] = useState('home'); // 'home', 'main', etc.
 
   const handleLoginSuccess = () => {
     setIsConnected(true);

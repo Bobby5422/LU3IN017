@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { register } from '../../services/api';
 
 function RegisterForm({ onRegisterSuccess }) {
   const [form, setForm] = useState({
@@ -7,18 +8,16 @@ function RegisterForm({ onRegisterSuccess }) {
     password: ''
   });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Appel API pour créer le compte
-    const response = await fetch('http://localhost:3000/api/users/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form)
-    });
-    if (response.ok) {
-      onRegisterSuccess(); // redirige vers la page principale
-    }
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    await register(form.email, form.password); // NB : username ignoré par backend actuellement
+    onRegisterSuccess();
+  } catch (err) {
+    console.error(err);
+    // Affiche une erreur à l’utilisateur si nécessaire
+  }
+};
 
   return (
     <form onSubmit={handleSubmit}>

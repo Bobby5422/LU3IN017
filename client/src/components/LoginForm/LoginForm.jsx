@@ -4,7 +4,7 @@ import { login } from '../../services/api';
 import './LoginForm.css';
 
 function LoginForm({ onLoginSuccess }) {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
 
@@ -13,7 +13,7 @@ function LoginForm({ onLoginSuccess }) {
     setError(null);
 
     try {
-      const response = await login(username, password);
+      const response = await login(email, password);
       if (response.status === 200) {
         onLoginSuccess(); // notifie App.js ou parent que l'utilisateur est connecté
       }
@@ -29,11 +29,11 @@ function LoginForm({ onLoginSuccess }) {
         <h2>Connexion</h2>
         {error && <p className="error">{error}</p>}
         <div>
-          <label>Nom d'utilisateur</label>
+          <label>Email</label>
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>

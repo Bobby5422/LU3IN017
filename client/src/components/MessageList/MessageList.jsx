@@ -5,7 +5,7 @@ function MessageList({ messages }) {
   return (
     <div className="message-list">
       {messages.map(message => (
-        <MessageItem key={message.id} message={message} />
+        <MessageItem key={message._id} message={message} />
       ))}
     </div>
   );
