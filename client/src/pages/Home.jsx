@@ -1,12 +1,12 @@
 import React from 'react';
-import SearchForm from './SearchForm';
-import NewMessageForm from './NewMessageForm';
-import MessageList from './MessageList';
+import MessageSearch from '../components/MessageSearch/MessageSearch';
+import NewMessageForm from '../components/NewMessageForm/NewMessageForm';
+import MessageList from '../components/MessageList/MessageList';
 
 function Home() {
   return (
     <div className="home">
-      <SearchForm />
+      <MessageSearch />
       <NewMessageForm />
       <MessageList />
     </div>

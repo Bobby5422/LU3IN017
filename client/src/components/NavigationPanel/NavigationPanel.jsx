@@ -1,35 +1,30 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import LogoutButton from '../LogoutButton/LogoutButton';
 import './NavigationPanel.css';
 
-function NavigationPanel({ isConnected, logout, login }) {
+function NavigationPanel({ isConnected, logout }) {
   return (
-    <nav className="header">
-      <div className="header-left">
-        <img src="/assets/logo.png" alt="Logo" className="logo" />
-      </div>
+    <nav className="navigation-panel">
+      <h1>Organiz'Asso</h1>
 
-      <div className="header-center">
-        <h1>Organiz'Asso</h1>
-      </div>
-
-      <div className="header-right">
-        {isConnected ? (
-          <>
-            <ul className="nav-links">
-              <li><button onClick={() => window.location.reload()}>Forum Ouvert</button></li>
-              <li><button onClick={() => alert('Page Profil à implémenter')}>Profil</button></li>
-              <li><button onClick={() => alert('Page AdminPanel (si admin) à implémenter')}>Admin Panel</button></li>
-            </ul>
-            <LogoutButton logout={logout} />
-          </>
-        ) : (
-          <button onClick={login}>Login</button>
-        )}
-      </div>
+      {isConnected ? (
+        <>
+          <ul className="nav-links">
+            <li><Link to="/main">Forum Ouvert</Link></li>
+            <li><Link to="/profile">Profil</Link></li>
+            <li><Link to="/admin">Admin Panel</Link></li>
+          </ul>
+          <LogoutButton logout={logout} />
+        </>
+      ) : (
+        <div className="login-info">
+          <p>Veuillez vous connecter pour accéder au forum.</p>
+          <Link to="/login">Se connecter</Link>
+        </div>
+      )}
     </nav>
   );
 }
-
 
 export default NavigationPanel;

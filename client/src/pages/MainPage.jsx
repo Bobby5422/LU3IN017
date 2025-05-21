@@ -4,7 +4,10 @@ import MessageSearch from '../components/MessageSearch/MessageSearch';
 import NewMessageForm from '../components/NewMessageForm/NewMessageForm';
 
 function MainPage() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+  { id: 1, author: 'Alice', text: 'Bienvenue sur le forum !' },
+  { id: 2, author: 'Bob', text: 'Bonjour tout le monde !' },
+]);
   const [searchParams, setSearchParams] = useState({ keywords: '', fromDate: null, toDate: null, author: '' });
   const [refresh, setRefresh] = useState(false);
 
