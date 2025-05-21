@@ -1,53 +1,77 @@
 // src/services/api.js
 import axios from 'axios';
 
-// Configuration d'Axios
-axios.defaults.baseURL = 'http://localhost:8000'; // à adapter selon ton backend
-axios.defaults.withCredentials = true; // utile si le backend utilise des cookies de session
+// On crée une instance pour éviter de modifier le defaults global
+const api = axios.create({
+  baseURL: 'http://localhost:3000/api', // ton server écoute sur :3000/api
+  withCredentials: true,                // si tu utilises express-session
+});
 
 // ----- AUTHENTIFICATION -----
-export const login = (username, password) => {
-  return axios.post('/api/login', { username, password });
+
+// POST /api/users/register
+export const register = (email, password) => {
+  return api.post('/users/register', { email, password });
 };
 
-export const register = (username, password) => {
-  return axios.post('/api/register', { username, password });
+// POST /api/users/login
+export const login = (email, password) => {
+  return api.post('/users/login', { email, password });
 };
 
+// POST (ou DELETE) /api/users/logout
+// Si tu as implémenté un logout en POST, sinon ajuste en delete
 export const logout = () => {
-  return axios.delete('/api/logout');
+  return api.post('/users/logout');
+};
+
+// GET /api/users/me  (optionnel pour récupérer le profil courant)
+export const fetchCurrentUser = () => {
+  return api.get('/users/me');
 };
 
 // ----- MESSAGES -----
-export const fetchMessages = (isPrivate = false) => {
-  return axios.get(isPrivate ? '/api/messages/private' : '/api/messages/public');
+
+// GET /api/messages
+export const fetchMessages = () => {
+  return api.get('/messages');
 };
 
-export const postMessage = (text) => {
-  return axios.post('/api/messages', { text });
+// POST /api/messages
+export const postMessage = (author, content) => {
+  return api.post('/messages', { author, content });
 };
 
+// DELETE /api/messages/:id
 export const deleteMessage = (messageId) => {
-  return axios.delete(`/api/messages/${messageId}`);
+  return api.delete(`/messages/${messageId}`);
 };
 
-export const searchMessages = (query) => {
-  return axios.get('/api/messages/search', { params: { q: query } });
+// GET /api/messages/:id
+export const fetchMessageById = (messageId) => {
+  return api.get(`/messages/${messageId}`);
 };
 
-export const getUserMessages = (userId) => {
-  return axios.get(`/api/users/${userId}/messages`);
+// PUT or PATCH /api/messages/:id
+export const updateMessage = (messageId, update) => {
+  return api.put(`/messages/${messageId}`, update);
 };
 
-// ----- ADMINISTRATION -----
-export const fetchPendingUsers = () => {
-  return axios.get('/api/admin/pending');
+// ----- UTILISATEURS (ADMIN / PROFIL) -----
+
+// GET /api/users/:id
+export const fetchUserById = (userId) => {
+  return api.get(`/users/${userId}`);
 };
 
-export const validateUser = (userId) => {
-  return axios.post(`/api/admin/validate/${userId}`);
+// GET /api/users       (si tu as un endpoint listant les users)
+export const fetchAllUsers = () => {
+  return api.get('/users');
 };
 
-export const updateUserStatus = (userId, newStatus) => {
-  return axios.patch(`/api/admin/users/${userId}`, { status: newStatus });
+// PATCH /api/users/:id
+export const updateUser = (userId, data) => {
+  return api.patch(`/users/${userId}`, data);
 };
+
+export default api;
