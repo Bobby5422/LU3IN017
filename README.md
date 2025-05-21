@@ -8,6 +8,10 @@
     ```
 
 - **Après avoir codé :**
+    - Mise à jour
+        ```
+        git pull origin main    #mise à jour de la copie locale
+        ```
     - Enrigstrement des modifications 
         ```
         git add .   #ajout des fichiers modifies
