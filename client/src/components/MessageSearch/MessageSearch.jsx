@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function SearchForm() {
+function MessageSearch() {
   const [searchTerm, setSearchTerm] = useState('');
   const [dateDebut, setDateDebut] = useState('');
   const [dateFin, setDateFin] = useState('');
@@ -38,4 +38,4 @@ function SearchForm() {
   );
 }
 
-export default SearchForm;
+export default MessageSearch;

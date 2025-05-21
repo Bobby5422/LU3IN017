@@ -39,7 +39,7 @@ export const fetchMessages = () => {
 
 // POST /api/messages
 export const postMessage = (author, content) => {
-  return api.post('/messages', { author, content });
+  return api.post('/messages', { owner: author, contenu: content });
 };
 
 // DELETE /api/messages/:id

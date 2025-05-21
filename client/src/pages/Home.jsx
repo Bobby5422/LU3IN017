@@ -1,14 +1,23 @@
-import React from 'react';
-import MessageSearch from '../components/MessageSearch/MessageSearch';
-import NewMessageForm from '../components/NewMessageForm/NewMessageForm';
-import MessageList from '../components/MessageList/MessageList';
+import React, { useState } from 'react';
+import LoginForm from '../components/LoginForm/LoginForm';
+import RegisterForm from '../components/RegisterForm/RegisterForm';
 
-function Home() {
+function Home({ onLoginSuccess }) {
+  const [showLogin, setShowLogin] = useState(true);
+
   return (
     <div className="home">
-      <MessageSearch />
-      <NewMessageForm />
-      <MessageList />
+      <h2>Bienvenue sur le forum</h2>
+
+      <div>
+        <button onClick={() => setShowLogin(true)}>Se connecter</button>
+        <button onClick={() => setShowLogin(false)}>Créer un compte</button>
+      </div>
+
+      {showLogin 
+        ? <LoginForm onLoginSuccess={onLoginSuccess} />
+        : <RegisterForm onRegisterSuccess={onLoginSuccess} />
+      }
     </div>
   );
 }

@@ -9,8 +9,8 @@ import Home from './pages/Home';
 import './App.css';
 
 function App() {
-  const [isConnected, setIsConnected] = useState(false);
-  const [page, setPage] = useState('home'); // 'home', 'main', etc.
+  const [isConnected, setIsConnected] = useState(true);
+  const [page, setPage] = useState('main'); // 'home', 'main', etc.
 
   const handleLoginSuccess = () => {
     setIsConnected(true);
@@ -28,7 +28,7 @@ function App() {
         <NavigationPanel isConnected={isConnected} logout={handleLogout} />
         
         <Routes>
-          <Route path="/" element={isConnected ? <Navigate to="/main" /> : <Home />} />
+          <Route path="/" element={isConnected ? <Navigate to="/main" /> : <Home onLoginSuccess={handleLoginSuccess} /> } />
           <Route path="/login" element={<LoginForm onLoginSuccess={handleLoginSuccess} />} />
           <Route path="/main" element={isConnected ? <MainPage /> : <Navigate to="/login" />} />
           <Route path="/profile" element={isConnected ? <Profile /> : <Navigate to="/login" />} />
