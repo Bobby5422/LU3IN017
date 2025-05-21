@@ -7,13 +7,31 @@ async function registerUser(req, res) {
   res.json(user);
 }
 
-async function loginUser(req, res) {
-  const db = await connectDB();
-  const user = await findUserByEmail(db, req.body.email);
-  if (user) {
-    req.session.user = user._id; // Stocke dans session
-    res.json({ message: 'Connecté avec succès', user });
-  } else res.status(404).send('Utilisateur introuvable');
+async function loginUserController(req, res) {
+  const { email, password } = req.body;
+  try {
+    const user = await req.db.collection('users').findOne({ email });
+    if (!user) {
+      return res.status(401).json({ error: 'Utilisateur non trouvé' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Mot de passe incorrect' });
+    }
+
+    // Auth OK → on crée la session
+    req.session.user = {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+    };
+
+    res.status(200).json({ message: 'Connexion réussie' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
 }
 
 function logoutUser(req, res) {

@@ -1,9 +1,11 @@
 // src/components/LoginForm/LoginForm.jsx
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/api';
 import './LoginForm.css';
 
 function LoginForm({ onLoginSuccess }) {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -16,6 +18,7 @@ function LoginForm({ onLoginSuccess }) {
       const response = await login(email, password);
       if (response.status === 200) {
         onLoginSuccess(); // notifie App.js ou parent que l'utilisateur est connecté
+        navigate('/main');        // redirige vers la page principale
       }
     } catch (err) {
       setError('Identifiants invalides ou erreur serveur.');
