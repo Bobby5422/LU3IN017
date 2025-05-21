@@ -1,0 +1,68 @@
+App
+├── NavigationPanel
+│   ├── LoginForm
+│   └── LogoutButton
+├── MainPage
+│   ├── MessageList
+│   │   ├── MessageItem
+│   ├── MessageSearch
+│   └── NewMessageForm
+├── ProfilePage
+│   └── MessageList (prop: userID)
+├── AdminPanel
+│   ├── UserValidationList
+│   │   └── UserItem
+│   └── UserStatusManager
+└── RegisterForm
+
+client/
+├── public/
+│   └── index.html
+├── src/
+│   ├── assets/                  # images, logos, icônes, etc.
+│   ├── components/              # composants réutilisables
+│   │   ├── NavigationPanel/
+│   │   │   ├── NavigationPanel.jsx
+│   │   │   └── NavigationPanel.css
+│   │   ├── LoginForm/
+│   │   │   ├── LoginForm.jsx
+│   │   │   └── LoginForm.css
+│   │   ├── LogoutButton/
+│   │   │   ├── LogoutButton.jsx
+│   │   │   └── LogoutButton.css
+│   │   ├── RegisterForm/
+│   │   │   ├── RegisterForm.jsx
+│   │   │   └── RegisterForm.css
+│   │   ├── MessageList/
+│   │   │   ├── MessageList.jsx
+│   │   │   └── MessageItem.jsx
+│   │   ├── MessageSearch/
+│   │   │   ├── MessageSearch.jsx
+│   │   │   └── MessageSearch.css
+│   │   ├── NewMessageForm/
+│   │   │   ├── NewMessageForm.jsx
+│   │   │   └── NewMessageForm.css
+│   │   ├── UserValidationList/
+│   │   │   ├── UserValidationList.jsx
+│   │   │   └── UserItem.jsx
+│   │   └── UserStatusManager/
+│   │       └── UserStatusManager.jsx
+│
+│   ├── pages/                   # vues principales (liées au routage)
+│   │   ├── HomePage.jsx         # page d'accueil avant connexion
+│   │   ├── MainPage.jsx         # forum principal
+│   │   ├── ProfilePage.jsx      # profil utilisateur
+│   │   ├── OtherProfilePage.jsx # profil public d'un autre utilisateur
+│   │   └── AdminPanel.jsx       # interface d'administration
+│
+│   ├── services/                # appels à l'API backend
+│   │   ├── api.js               # fonctions génériques (get, post, etc.)
+│   │   └── authService.js       # login, logout, register, etc.
+│
+│   ├── App.jsx                  # composant principal
+│   ├── App.css
+│   ├── index.js                # point d’entrée React
+│   └── index.css
+├── .env
+├── package.json
+└── README.md
