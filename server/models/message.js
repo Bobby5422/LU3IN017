@@ -38,7 +38,7 @@ async function getAllMessages(db) {
           text: 1,
           createdAt: 1,
           'author._id': 1,
-          'author.email': 1
+          'author.username': 1
         }
       }
     ])

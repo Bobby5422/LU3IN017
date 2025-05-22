@@ -36,6 +36,7 @@ export default function Profile() {
     await updateUser(userId, updatedData);
     // Recharger les données user
     const { data } = await fetchCurrentUser();
+    console.log('userData:', userData);
     setUser(data);
   };
 

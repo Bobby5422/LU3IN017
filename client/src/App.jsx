@@ -1,5 +1,7 @@
 // client/src/App.jsx
 import React, { useState } from 'react';
+import { useEffect } from 'react';
+import { fetchCurrentUser } from './services/api';
 import {
   BrowserRouter as Router,
   Routes,
@@ -18,10 +20,23 @@ import './App.css';
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);
-
+  
   const handleLoginSuccess    = () => setIsConnected(true);
   const handleLogout          = () => setIsConnected(false);
   const handleRegisterSuccess = () => window.location.href = '/login';
+
+  useEffect(() => {
+    async function checkSession() {
+      try {
+        await fetchCurrentUser();
+        setIsConnected(true); // l'utilisateur est bien connecté côté serveur
+      } catch (err) {
+        setIsConnected(false); // pas connecté (erreur 401, etc.)
+      }
+    }
+
+    checkSession();
+  }, []);
 
   return (
     <Router>

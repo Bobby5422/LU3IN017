@@ -5,33 +5,26 @@ import NewMessageForm from '../components/NewMessageForm/NewMessageForm';
 import { fetchMessages } from '../services/api';
 
 function MainPage() {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      contenu: 'Bienvenue sur le forum !',
-      owner: 'Alice',
-      timestamp: '2025-05-21T10:00:00Z',
-    },
-]);
+  const [messages, setMessages] = useState([]);
   const [searchParams, setSearchParams] = useState({ keywords: '', fromDate: null, toDate: null, author: '' });
   const [refresh, setRefresh] = useState(false);
 
-  // Charger les messages au chargement et à chaque refresh ou changement des critères de recherche
-useEffect(() => {
-  async function loadMessages() {
-    try {
-      const response = await fetchMessages(); // axios renvoie { data }
-      setMessages(response.data);
-    } catch (error) {
-      console.error(error);
-      setMessages([]);
+  useEffect(() => {
+    async function loadMessages() {
+      try {
+        const response = await fetchMessages();
+        console.log('Messages fetched:', response.data); // Pour vérifier la structure
+        setMessages(response.data);
+      } catch (error) {
+        console.error(error);
+        setMessages([]);
+      }
     }
-  }
-  loadMessages();
-}, [searchParams, refresh]);
+    loadMessages();
+  }, [searchParams, refresh]);
 
-  // Fonction pour déclencher le rechargement après ajout d’un message
   const handleMessageAdded = () => {
+    setReplyTo(null); 
     setRefresh(!refresh);
   };
 

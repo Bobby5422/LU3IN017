@@ -13,6 +13,7 @@ router.get('/', listMessages);
 router.post(
   '/',
   body('text').isString().notEmpty(),
+  body('replyTo').optional().isMongoId(),
   validate,
   postMessage
 );

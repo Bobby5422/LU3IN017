@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
+import { postMessage } from '../../services/api'; // <-- À ajouter
 
-function NewMessageForm() {
+function NewMessageForm({ onMessageAdded }) {
   const [messageContent, setMessageContent] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Appeler l'API REST createMessage pour créer un nouveau message
-    // Exemple : api.createMessage(currentUserId, { message: messageContent }).then(...);
-    setMessageContent('');
+
+    try {
+      await postMessage(messageContent); // <-- Envoie le message à l’API
+      setMessageContent('');
+      onMessageAdded(); // <-- Demande au parent de recharger les messages
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout du message :', error);
+    }
   };
 
   return (
