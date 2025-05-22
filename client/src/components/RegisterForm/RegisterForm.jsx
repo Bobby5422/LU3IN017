@@ -25,8 +25,6 @@ export default function RegisterForm({ onRegisterSuccess }) {
 
   // Validation front-end
   const validate = () => {
-    if (!form.prenom.trim()) return 'Le prénom est requis.';
-    if (!form.nom.trim()) return 'Le nom est requis.';
     if (!form.pseudo.trim()) return 'Le pseudo est requis.';
     if (!form.email) return 'L’email est requis.';
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -57,9 +55,7 @@ export default function RegisterForm({ onRegisterSuccess }) {
     try {
       // 2) Appel à l'API register
       await register({
-        prenom:   form.prenom,
-        nom:      form.nom,
-        pseudo:   form.pseudo,
+        username:   form.pseudo,
         email:    form.email,
         password: form.password,
         role:     form.role,
@@ -94,24 +90,6 @@ export default function RegisterForm({ onRegisterSuccess }) {
       {success && <p className="success">{success}</p>}
 
       <form onSubmit={handleSubmit} noValidate>
-        <div className="field">
-          <label htmlFor="prenom">Prénom</label>
-          <input
-            id="prenom" name="prenom" type="text"
-            value={form.prenom} onChange={handleChange}
-            disabled={loading} required
-          />
-        </div>
-
-        <div className="field">
-          <label htmlFor="nom">Nom</label>
-          <input
-            id="nom" name="nom" type="text"
-            value={form.nom} onChange={handleChange}
-            disabled={loading} required
-          />
-        </div>
-
         <div className="field">
           <label htmlFor="pseudo">Pseudo</label>
           <input
