@@ -1,8 +1,9 @@
 // server/routes/users.js
 const express = require('express');
 const { body } = require('express-validator');
-const { register, login, logout, me } = require('../controllers/usersController');
+const { register, login, logout, me , validateUser , getAllUsers } = require('../controllers/usersController');
 const validate = require('../middlewares/validate');
+const isAdmin = require('../middlewares/isAdmin');
 
 const router = express.Router();
 
@@ -29,5 +30,11 @@ router.post('/logout', logout);
 
 // Récupère l'utilisateur courant via la session
 router.get('/me', me);
+
+// Route admin pour valider un utilisateur
+router.patch('/:id/validate', isAdmin, validateUser);
+
+// Route admin pour obtenir tous les utilisateurs
+router.get('/', isAdmin, getAllUsers);
 
 module.exports = router;

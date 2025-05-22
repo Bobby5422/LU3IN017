@@ -31,6 +31,11 @@ export const logout = () =>
 export const fetchCurrentUser = () =>
   api.get('/users/me');
 
+// Valider un utilisateur (admin)
+export const validateUser = (id) =>
+  api.patch(`/users/${id}/validate`);
+
+
 // ——— UTILISATEURS ———
 
 /** Récupère un utilisateur par son ID */

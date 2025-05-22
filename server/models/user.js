@@ -22,7 +22,8 @@ async function createUser(db, data) {
     email: data.email,
     username: data.username || '',
     password: data.password, // Non haché (comme demandé)
-    role: 'user',            // Rôle par défaut, à adapter si besoin
+    role: ['admin', 'user'].includes(data.role) ? data.role : 'user',
+    validated: false
   };
 
   const result = await db.collection('users').insertOne(newUser);

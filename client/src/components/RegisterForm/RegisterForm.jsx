@@ -4,13 +4,14 @@ import { register } from '../../services/api';
 import './RegisterForm.css';
 
 export default function RegisterForm({ onRegisterSuccess }) {
-  const [form, setForm]       = useState({
+  const [form, setForm] = useState({
     prenom: '',
     nom: '',
     pseudo: '',
     email: '',
     password: '',
-    passwordConfirm: ''
+    passwordConfirm: '',
+    role: 'user'
   });
   const [error, setError]     = useState(null);
   const [success, setSuccess] = useState(null);
@@ -60,7 +61,8 @@ export default function RegisterForm({ onRegisterSuccess }) {
         nom:      form.nom,
         pseudo:   form.pseudo,
         email:    form.email,
-        password: form.password
+        password: form.password,
+        role:     form.role,
       });
 
       // Succès → message + callback parent
@@ -144,6 +146,20 @@ export default function RegisterForm({ onRegisterSuccess }) {
             value={form.passwordConfirm} onChange={handleChange}
             disabled={loading} required
           />
+        </div>
+        <div className="field">
+          <label htmlFor="role">Rôle</label>
+          <select
+            id="role"
+            name="role"
+            value={form.role || 'user'}
+            onChange={handleChange}
+            disabled={loading}
+            required
+          >
+            <option value="user">Membre</option>
+            <option value="admin">Admin</option>
+          </select>
         </div>
 
         <button type="submit" disabled={loading}>

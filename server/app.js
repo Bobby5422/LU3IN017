@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 
 const { connectDB } = require('./db');
+const sessionUser = require('./middlewares/sessionUser');
 const usersRouter    = require('./routes/users');
 const messagesRouter = require('./routes/messages');
 
@@ -33,6 +34,7 @@ app.use(session({
   cookie: { secure: false } // mettre true en production avec HTTPS
 }));
 
+
 // 5) Health-check simple
 app.get('/healthz', (_req, res) => res.sendStatus(200));
 
@@ -46,6 +48,9 @@ connectDB()
       req.db = db;
       next();
     });
+
+    const sessionUser = require('./middlewares/sessionUser');
+    app.use(sessionUser);
 
     // 7) Monte les routers
     app.use('/api/users',    usersRouter);
