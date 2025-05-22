@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchCurrentUser, fetchUserMessages, updateUser } from '../services/api';
 import ProfileItem from '../components/ProfileItem/ProfileItem';
-import MessageItem from '../components/MessageItem/MessageItem';
+import MessageItem from '../components/MessageList/MessageItem';
 import './Profile.css';
 
 export default function Profile() {
