@@ -3,39 +3,41 @@ import React, { useState } from 'react';
 import './ProfileItem.css';
 
 /**
- * Affiche les informations d’un utilisateur et permet leur modification si c’est son propre profil.
+ * Affiche et (si isOwnProfile) édite le profil d’un utilisateur.
  *
  * Props :
- *  - user            : l’objet utilisateur { _id, prenom, nom, pseudo, email, role }
- *  - isOwnProfile    : booléen, true si c’est le profil du currentUser
- *  - onUpdateProfile : fn(userId, updatedData) => Promise, appelée quand on sauve les modifs
+ *  - user            : { _id, prenom, nom, pseudo, email, role, ... }
+ *  - isOwnProfile    : boolean, true si c’est le profil du user connecté
+ *  - onUpdateProfile : function(userId, updatedData) => Promise
  */
 export default function ProfileItem({ user, isOwnProfile, onUpdateProfile }) {
-  // Mode édition actif ?
+  // mode édition
   const [editMode, setEditMode] = useState(false);
-  // Formulaire contrôlé pour les champs éditables
+
+  // formulaire contrôlé initialisé avec les données du user
   const [form, setForm] = useState({
     prenom: user.prenom || '',
     nom:    user.nom    || '',
     pseudo: user.pseudo || '',
     email:  user.email  || '',
   });
+
   const [loading, setLoading] = useState(false);
-  const [error, setError]   = useState(null);
+  const [error,   setError]   = useState(null);
   const [success, setSuccess] = useState(null);
 
-  // Met à jour un champ de saisie
+  // mise à jour d’un champ
   const handleChange = e => {
     const { name, value } = e.target;
     setForm(f => ({ ...f, [name]: value }));
   };
 
-  // Soumets les modifications
+  // sauvegarde des modifications via onUpdateProfile
   const handleSave = async () => {
     setError(null);
     setSuccess(null);
 
-    // ici tu peux ajouter de la validation front (email, longueur, etc.)
+    // validation front
     if (!form.prenom.trim() || !form.nom.trim()) {
       setError('Le prénom et le nom sont requis.');
       return;
@@ -58,57 +60,32 @@ export default function ProfileItem({ user, isOwnProfile, onUpdateProfile }) {
     <div className="profile-item">
       <h2>Profil de {user.pseudo}</h2>
 
-      {/* Affichage des messages d’état */}
+      {/* Messages d’état */}
       {error   && <div className="error">{error}</div>}
       {success && <div className="success">{success}</div>}
 
       <div className="fields">
-        {/** Prénom */}
         <label>Prénom :</label>
         {editMode
-          ? <input
-              name="prenom"
-              value={form.prenom}
-              onChange={handleChange}
-              disabled={loading}
-            />
+          ? <input name="prenom" value={form.prenom} onChange={handleChange} disabled={loading} />
           : <span>{user.prenom}</span>
         }
 
-        {/** Nom */}
         <label>Nom :</label>
         {editMode
-          ? <input
-              name="nom"
-              value={form.nom}
-              onChange={handleChange}
-              disabled={loading}
-            />
+          ? <input name="nom" value={form.nom} onChange={handleChange} disabled={loading} />
           : <span>{user.nom}</span>
         }
 
-        {/** Pseudo */}
         <label>Pseudo :</label>
         {editMode
-          ? <input
-              name="pseudo"
-              value={form.pseudo}
-              onChange={handleChange}
-              disabled={loading}
-            />
+          ? <input name="pseudo" value={form.pseudo} onChange={handleChange} disabled={loading} />
           : <span>{user.pseudo}</span>
         }
 
-        {/** Email */}
         <label>Email :</label>
         {editMode
-          ? <input
-              name="email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-              disabled={loading}
-            />
+          ? <input name="email" type="email" value={form.email} onChange={handleChange} disabled={loading} />
           : <span>{user.email}</span>
         }
       </div>
@@ -117,25 +94,14 @@ export default function ProfileItem({ user, isOwnProfile, onUpdateProfile }) {
         <div className="actions">
           {editMode
             ? <>
-                <button
-                  onClick={handleSave}
-                  disabled={loading}
-                  className="save-btn"
-                >
+                <button className="save-btn" onClick={handleSave} disabled={loading}>
                   {loading ? 'Enregistrement…' : 'Sauver'}
                 </button>
-                <button
-                  onClick={() => setEditMode(false)}
-                  disabled={loading}
-                  className="cancel-btn"
-                >
+                <button className="cancel-btn" onClick={() => setEditMode(false)} disabled={loading}>
                   Annuler
                 </button>
               </>
-            : <button
-                onClick={() => setEditMode(true)}
-                className="edit-btn"
-              >
+            : <button className="edit-btn" onClick={() => setEditMode(true)}>
                 Modifier mon profil
               </button>
           }

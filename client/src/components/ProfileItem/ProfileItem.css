@@ -1,9 +1,9 @@
 /* client/src/components/ProfileItem/ProfileItem.css */
 
 .profile-item {
-  max-width: 500px;
-  margin: 1rem auto;
-  padding: 1rem;
+  max-width: 600px;
+  margin: 1.5rem auto;
+  padding: 1.25rem;
   border: 1px solid #ccc;
   border-radius: 6px;
   background: #f9f9f9;
@@ -16,8 +16,8 @@
 
 .profile-item .fields {
   display: grid;
-  grid-template-columns: 100px 1fr;
-  row-gap: 0.5rem;
+  grid-template-columns: 120px 1fr;
+  row-gap: 0.75rem;
   column-gap: 1rem;
   align-items: center;
 }
@@ -28,7 +28,7 @@
 
 .profile-item .fields span,
 .profile-item .fields input {
-  padding: 0.3rem 0.5rem;
+  padding: 0.4rem 0.6rem;
   font-size: 1rem;
 }
 
@@ -44,7 +44,7 @@
 
 .profile-item .actions button {
   margin: 0 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.9rem;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -52,15 +52,15 @@
 
 .profile-item .save-btn {
   background-color: #27ae60;
-  color: white;
+  color: #fff;
 }
 
 .profile-item .cancel-btn {
   background-color: #c0392b;
-  color: white;
+  color: #fff;
 }
 
 .profile-item .edit-btn {
   background-color: #2980b9;
-  color: white;
+  color: #fff;
 }
