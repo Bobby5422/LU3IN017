@@ -4,73 +4,51 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/api';
 import './LoginForm.css';
 
-export default function LoginForm({ onLoginSuccess, onSwitchToRegister }) {
-  const navigate = useNavigate();
+export default function LoginForm({ onLoginSuccess }) {
+  const navigate = useNavigate();         // ← on récupère useNavigate
+  const [form, setForm]         = useState({ email: '', password: '' });
+  const [error, setError]       = useState(null);
+  const [loading, setLoading]   = useState(false);
 
-  // État contrôlé du formulaire
-  const [form, setForm]   = useState({ email: '', password: '' });
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  // 1) Gestion centralisée des changements
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(f => ({ ...f, [name]: value }));
   };
 
-  // 2) Validation client côté front
   const validate = () => {
-    const { email, password } = form;
-
-    if (!email) return 'L’email est requis.';
-    // simple regex pour valider le format email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) return 'Le format de l’email est invalide.';
-
-    if (!password) return 'Le mot de passe est requis.';
-    if (password.length < 8) return 'Le mot de passe doit faire au moins 8 caractères.';
-
+    if (!form.email) return 'L’email est requis.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+      return 'Le format de l’email est invalide.';
+    if (!form.password) return 'Le mot de passe est requis.';
+    if (form.password.length < 8)
+      return 'Le mot de passe doit faire au moins 8 caractères.';
     return null;
   };
 
-  // 3) Soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
-    // 3.a) Erreur front si validation KO
     const clientError = validate();
     if (clientError) {
       setError(clientError);
       return;
     }
 
-    // 3.b) Appel API
     setLoading(true);
     try {
       const { data, status } = await login(form.email, form.password);
-
       if (status === 200) {
-        // remonte l'objet user (data) vers App.jsx
         onLoginSuccess(data);
-        // redirection vers la page principale
         navigate('/main');
       } else {
         setError('Échec de la connexion.');
       }
     } catch (err) {
-      // 3.c) Gestion des erreurs serveur / API
-      if (err.response) {
-        // 401 Unauthorized
-        if (err.response.status === 401) {
-          setError('Identifiants incorrects.');
-        } else {
-          // message d’erreur renvoyé par le back (err.response.data.error)
-          setError(err.response.data.error || 'Erreur inattendue du serveur.');
-        }
+      if (err.response?.status === 401) {
+        setError('Identifiants incorrects.');
       } else {
-        // pas de réponse (serveur injoignable, problème réseau…)
-        setError('Impossible de joindre le serveur.');
+        setError(err.response?.data?.error || 'Erreur inattendue du serveur.');
       }
       console.error(err);
     } finally {
@@ -82,8 +60,6 @@ export default function LoginForm({ onLoginSuccess, onSwitchToRegister }) {
     <div className="login-form">
       <form onSubmit={handleSubmit} noValidate>
         <h2>Connexion</h2>
-
-        {/* Affichage des messages d'erreur */}
         {error && <div className="error">{error}</div>}
 
         <div className="field">
@@ -94,7 +70,6 @@ export default function LoginForm({ onLoginSuccess, onSwitchToRegister }) {
             type="email"
             value={form.email}
             onChange={handleChange}
-            placeholder="exemple@domaine.com"
             disabled={loading}
             required
           />
@@ -118,12 +93,13 @@ export default function LoginForm({ onLoginSuccess, onSwitchToRegister }) {
         </button>
       </form>
 
-      {/* Lien / bouton pour basculer vers l'inscription */}
       <div className="footer">
         <span>Pas de compte ? </span>
+        {/* ← on navigue vers /register directement */}
         <button
           type="button"
-          onClick={onSwitchToRegister}
+          className="switch-button"
+          onClick={() => navigate('/register')}
           disabled={loading}
         >
           Inscription
