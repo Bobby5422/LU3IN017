@@ -1,5 +1,4 @@
 // server/models/user.js
-const bcrypt = require('bcrypt');
 const { ObjectId } = require('mongodb');
 
 /**
@@ -8,20 +7,26 @@ const { ObjectId } = require('mongodb');
  * - Hash le mot de passe
  * - Insert en base
  */
-async function createUser(db, { email, password }) {
-  // 1) Vérifie s'il existe déjà
-  const exist = await db.collection('users').findOne({ email });
-  if (exist) {
-    const err = new Error('Email déjà utilisé');
-    err.statusCode = 409;
+// models/user.js
+
+async function createUser(db, data) {
+  const existingUser = await db.collection('users').findOne({ email: data.email });
+
+  if (existingUser) {
+    const err = new Error('Cet email est déjà utilisé');
+    err.statusCode = 400; // Bad Request
     throw err;
   }
-  // 2) Hash du mot de passe
-  const hash = await bcrypt.hash(password, 10);
-  // 3) Insert en DB
-  const { insertedId } = await db.collection('users')
-    .insertOne({ email, password: hash, role: 'user', createdAt: new Date() });
-  return { _id: insertedId, email, role: 'user' };
+
+  const newUser = {
+    email: data.email,
+    username: data.username || '',
+    password: data.password, // Non haché (comme demandé)
+    role: 'user',            // Rôle par défaut, à adapter si besoin
+  };
+
+  const result = await db.collection('users').insertOne(newUser);
+  return { _id: result.insertedId, ...newUser };
 }
 
 /**

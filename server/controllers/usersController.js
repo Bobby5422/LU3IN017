@@ -25,7 +25,7 @@ async function login(req, res, next) {
     // 1) Recherche par email
     const user = await getUserByEmail(req.db, email);
     // 2) Vérifie l'existence et le hash
-    if (!user || !await bcrypt.compare(password, user.password)) {
+    if (!user || user.password !== password) {
       const err = new Error('Email ou mot de passe invalide');
       err.statusCode = 401;
       return next(err);
