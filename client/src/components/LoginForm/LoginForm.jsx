@@ -39,8 +39,10 @@ export default function LoginForm({ onLoginSuccess }) {
     try {
       const { data, status } = await login(form.email, form.password);
       if (status === 200) {
-        onLoginSuccess(data);
-        navigate('/main');
+        setTimeout(() => {
+          onLoginSuccess(data);   // déclenche setIsConnected(true) dans App
+          navigate('/main');
+        }, 100); // 100ms suffisent souvent, sinon essaie 200
       } else {
         setError('Échec de la connexion.');
       }

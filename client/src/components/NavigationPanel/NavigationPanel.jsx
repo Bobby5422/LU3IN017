@@ -11,7 +11,7 @@ import './NavigationPanel.css';
  *  - isConnected : booléen, utilisateur authentifié ou non  
  *  - logout()      : fonction à appeler pour déconnecter l’utilisateur
  */
-function NavigationPanel({ isConnected, logout }) {
+function NavigationPanel({ isConnected, role, logout }) {
   return (
     <nav className="navigation-panel">
       <h1>Organiz'Asso</h1>
@@ -21,7 +21,9 @@ function NavigationPanel({ isConnected, logout }) {
           <ul className="nav-links">
             <li><Link to="/main">Forum</Link></li>
             <li><Link to="/profile">Profil</Link></li>
+            {role === 'admin' && (
             <li><Link to="/admin">Administration</Link></li>
+            )}
           </ul>
           {/* onSupply logout() à LogoutButton via son prop onLogout */}
           <LogoutButton onLogout={logout} />

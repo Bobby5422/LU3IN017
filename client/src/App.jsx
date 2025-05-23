@@ -15,23 +15,40 @@ import RegisterForm    from './components/RegisterForm/RegisterForm';
 import MainPage        from './pages/MainPage';
 import Profile         from './pages/Profile';
 import AdminDashboard  from './pages/AdminDashboard';
+import { logout } from './services/api'; // si ce n'est pas encore importé
 
 import './App.css';
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);
+  const [role, setRole] = useState(null); // "admin", "user", ou null
   
   const handleLoginSuccess    = () => setIsConnected(true);
-  const handleLogout          = () => setIsConnected(false);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (err) {
+      console.error("Erreur lors de la déconnexion :", err.response || err.message || err);
+    } finally {
+      setIsConnected(false);
+      setRole(null);
+      window.location.href = '/login';
+    }
+  };
+
   const handleRegisterSuccess = () => window.location.href = '/login';
 
   useEffect(() => {
     async function checkSession() {
       try {
-        await fetchCurrentUser();
-        setIsConnected(true); // l'utilisateur est bien connecté côté serveur
+        const response = await fetchCurrentUser();
+        console.log("Utilisateur connecté:", response.data); // 👈 Ajoute ça
+        setIsConnected(true);
+        setRole(response.data.role); // Ajoute cette ligne
       } catch (err) {
-        setIsConnected(false); // pas connecté (erreur 401, etc.)
+        setIsConnected(false);
+        setRole(null); // Reset du rôle
       }
     }
 
@@ -40,7 +57,7 @@ function App() {
 
   return (
     <Router>
-      <NavigationPanel isConnected={isConnected} logout={handleLogout} />
+      <NavigationPanel isConnected={isConnected} role={role} logout={handleLogout} />
 
       <Routes>
         <Route path="/" element={

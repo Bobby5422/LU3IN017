@@ -25,7 +25,7 @@ export const login = (email, password) =>
 
 /** Déconnexion */
 export const logout = () =>
-  api.post('/users/logout');
+  api.post('/users/logout', {}, { withCredentials: true });
 
 /** Récupère l’utilisateur courant via la session */
 export const fetchCurrentUser = () =>

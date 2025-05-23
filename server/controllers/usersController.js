@@ -46,9 +46,12 @@ async function login(req, res, next) {
 /**
  * POST /api/users/logout
  */
-async function logout(req, res) {
-  req.session.destroy();
-  res.sendStatus(204);
+function logout(req, res, next) {
+  req.session.destroy((err) => {
+    if (err) return next(err);
+    res.clearCookie('connect.sid'); // très important
+    res.sendStatus(204);
+  });
 }
 
 /**
